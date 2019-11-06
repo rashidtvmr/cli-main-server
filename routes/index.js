@@ -1,34 +1,34 @@
 let userRoute=require('express').Router();
 let commentRoute=require('express').Router();
 let nonUserCmntRoute=require('express').Router();
+
+let {userController}=require('../controller/index');
+let isAuth=require('../middleware/auth');
 /**
  * user route will handle route to /api/v1/user/
  */
 
- // this will create a new user NOTE:POST request
-userRoute.post('/',(req,res)=>{
-    res.json("post user")
-});
+userRoute.post('/login',userController.loginUser); 
 
-// this will return a particular user
-userRoute.get('/:id',(req,res)=>{
-    res.json("get particular user"+req.params.id);
-});
+// this will create a new user NOTE:POST request
+userRoute.post('/',userController.createUser);
 
 // this will return a all user
-userRoute.get('/',(req,res)=>{
+userRoute.get('/all',(req,res)=>{
     res.json("get all user")
 });
 
+// this will return a particular user
+userRoute.get('/',isAuth,userController.getSingleUser);
+
+
 // this route handle user profile update
-userRoute.put('/:id',(req,res)=>{
-    res.json("update particular user"+req.params.id);
-});
+userRoute.put('/:id',isAuth,userController.updateUser);
 
 // this route will handle user account deletion
-userRoute.delete('/:id',(req,res)=>{
-    res.json("dlt user"+req.params.id);
-});
+userRoute.delete('/:id',isAuth,userController.deleteUser);
+
+
 
 // <---- Comment section  ----->
 

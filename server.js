@@ -1,29 +1,31 @@
-const express=require("express");
-app=express();
 
+// To fetch environment variables
+require("dotenv/config");
 
+// Express setup
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+app = express();
 
-app.set("view engine", "ejs");
-app.set("views", "views");
+app.use(cors());
 
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://rashidtvmr:Mass94877348@mycluster-ztbvh.mongodb.net/cli-main-server', {useNewUrlParser: true});
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static("public"));
 
-const {userRoute,
-    commentRoute,
-    nonUserCmntRoute 
-    } =require('./routes/index');
+// database setup
+const mongoose = require("mongoose");
+mongoose.connect(process.env.ATLAS_URL, { useNewUrlParser: true });
 
-app.use('/api/v1/user',userRoute);
-app.use('/api/v1/cmt',commentRoute);
-app.use('/api/v1/nu/cmt',nonUserCmntRoute);
+// route handling
+const { userRoute, commentRoute, nonUserCmntRoute } = require("./routes/index");
 
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/cmt", commentRoute);
+app.use("/api/v1/nu/cmt", nonUserCmntRoute);
 
-app.use(express.static('public'));
-app.get("/",(req,res)=>{res.render("index")});
-
-
-let port=process.env.PORT || 4938;
-app.listen(port,()=>{
-    console.log("app is running at ",port);
-})
+let port = process.env.PORT || 4938;
+app.listen(port, () => {
+  console.log("app is running at ", port);
+});
