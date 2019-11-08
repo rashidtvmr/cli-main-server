@@ -11,15 +11,17 @@ const { check } = require('express-validator');
  * user route will handle route to /api/v1/user/
  */
 
+/** handle login route(/api/v1/usr/login) ;req body is {"username":"","password":""} */
 userRoute.post(
     '/login',
-    [
+    [  //this array is middleware to validate req body 
         check('username').isLength({ min: 3 }).withMessage("Üsername is required"),
-        check('password').isLength({ min: 5 }).withMessage("Password should be minimum 6 characters")
+        check('password').isLength({ min: 5 }).withMessage("Password should be minimum 5 characters")
     ],
-    userController.loginUser); 
+    userController.loginUser
+    ); 
 
-// this will create a new user NOTE:POST request
+/** route to create new user POST:/api/v1/user ; req body is  {"username":"",email:"","password":""} */
 userRoute.post(
     '/',
     [
@@ -27,19 +29,28 @@ userRoute.post(
         check("email").trim().isEmail().normalizeEmail().withMessage("Invalid Email"),
         check('password').trim().isLength({ min: 5 }).withMessage("Password should be minimum 6 characters")
     ]
-    ,userController.createUser);
+    ,userController.createUser
+    );
 
-// this will return a all user
-userRoute.get('/all',(req,res)=>{
-    res.json("get all user")
-});
+// route to get all user GET:/api/v1/user/all
+userRoute.get(
+    '/all',
+    (req,res)=>{
+        res.json("get all user")
+    });
 
 
-// this will return a particular user
-userRoute.get('/',isAuth,userController.getSingleUser);
+// route to get loggedin user
+userRoute.get(
+    '/',
+    isAuth,
+    userController.getLoggedinleUser
+    );
 
 
-// this route handle user profile update
+/** route to update user PUT:/api/v1/user ;request body {"username":"","email":"","password":""} 
+ *  all request body fields are optional
+ */
 userRoute.put(
     '/',[
         check('username').optional().trim().isLength({min:3}).withMessage("User Name must be 3 character long"),
@@ -47,11 +58,16 @@ userRoute.put(
         check('password').optional().trim().isLength({min:6}).withMessage("Password must be 6 or more characters")
     ]
     ,isAuth,
-    userController.updateUser);
+    userController.updateUser
+    );
 
 
-// this route will handle user account deletion
-userRoute.delete('/',isAuth,userController.deleteUser);
+// route to delete user
+userRoute.delete(
+    '/',
+    isAuth,
+    userController.deleteUser
+    );
 
 
 
