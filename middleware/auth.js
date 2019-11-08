@@ -19,23 +19,25 @@ module.exports=(req,res,next)=>{
       req.user.email = valid.email;
       next();
     } catch (ex) {
-      res.status(400).send("Invalid Access token");
+      console.log("Invalid JWT");
+      next({code:400,msg:"Invalid Access token"});
+      // res.status(400).send("Invalid Access token");
     }
   } else {
     const token = req.header("Authorization").split(" ")[1];
-    console.log("2.",req.header("Authorization"));
     if (!token)
-      return res.status(401).send("Access denied.No Authorization token");
+      return res.status(401).json("Access denied.No Authorization token");
     try {
       const valid = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Parsed JWT:",token)
+      console.log("Parsed JWT:",valid)
       req.user = {};
       req.user.id = valid._id;
       req.user.email = valid.email;
       next();
     } catch (ex) {
       console.log(ex);
-      res.status(400).send("Invalid Access token");
+      next({code:409,msg:ex.name+" "+ex.message});
+      // res.status(400).json("Invalid Access token");
     }
   }
 
