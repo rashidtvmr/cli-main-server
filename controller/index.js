@@ -190,6 +190,27 @@ userController.deleteUser=(req,res,next)=>{
     }
 }
 
+
+let commentController={};
+let Comment=require('../model/Comment');
+commentController.addComment=(req,res,next)=>{
+    const errors=validationResult(req);
+    if(! errors.isEmpty()){
+        next({code:401,msg:error.errors[0].msg})
+    }else{
+        let comment=new Comment(req.body);
+        comment.save((err,result)=>{
+            if(err){
+                console.log("Error while adding comment",err);
+                next({code:500,msg:"Unable to post comment"})
+            }else{
+                res.status(200).json({msg:"Comment Posted Successfully!!!"})
+            }
+        });
+    }
+}
+
 module.exports={
-    userController
+    userController,
+    commentController
 };
