@@ -1,4 +1,4 @@
-let {userController}=require('../controller/index');
+let {userController,commentController}=require('../controller/index');
 let isAuth=require('../middleware/auth');
 
 let userRoute=require('express').Router();
@@ -73,10 +73,15 @@ userRoute.delete(
 
 // <---- Comment section  ----->
 
+ 
  // this will create a new user NOTE:POST request
- commentRoute.post('/',(req,res)=>{
-    res.json("create a post");
-});
+ commentRoute.post(
+     '/',
+     isAuth,[
+         check('title').trim().not().isEmpty().withMessage("Title is required"),
+         check('comment').trim().isLength({min:10}).withMessage("Description shoul be 10 character or more!!")
+     ],
+     commentController.addComment);
 
 // this will return a particular user
 commentRoute.get('/:id',(req,res)=>{

@@ -23,9 +23,9 @@ mongoose.connect(process.env.ATLAS_URL, { useNewUrlParser: true });
 // route handling
 const { userRoute, commentRoute, nonUserCmntRoute } = require("./routes/index");
 
+app.use("/api/v1/cmnt", commentRoute);
 app.use("/api/v1/user", userRoute);
-app.use("/api/v1/cmt", commentRoute);
-app.use("/api/v1/nu/cmt", nonUserCmntRoute);
+app.use("/api/v1/nu/cmnt", nonUserCmntRoute);
 
 
 /**To handle error passed using next({code:errorCode,msg:"Error Message"}) */

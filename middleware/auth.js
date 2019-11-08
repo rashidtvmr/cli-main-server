@@ -10,7 +10,7 @@ module.exports=(req,res,next)=>{
     const token = req.query.access_token;
     console.log(token)
     if (!token)
-        return res.status(401).send("Access denied.No Authorization token");
+      return next({code:401,msg:"Access denied.No Authorization token"});
     
     try {
       const valid = jwt.verify(token, process.env.JWT_SECRET);
@@ -26,7 +26,8 @@ module.exports=(req,res,next)=>{
   } else {
     const token = req.header("Authorization").split(" ")[1];
     if (!token)
-      return res.status(401).json("Access denied.No Authorization token");
+      return next({code:401,msg:"Access denied.No Authorization token"});
+      // return res.status(401).json("Access denied.No Authorization token");
     try {
       const valid = jwt.verify(token, process.env.JWT_SECRET);
       console.log("Parsed JWT:",valid)

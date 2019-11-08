@@ -194,19 +194,27 @@ userController.deleteUser=(req,res,next)=>{
 let commentController={};
 let Comment=require('../model/Comment');
 commentController.addComment=(req,res,next)=>{
-    const errors=validationResult(req);
-    if(! errors.isEmpty()){
-        next({code:401,msg:error.errors[0].msg})
+    if(_.isUndefined(req.user.id)){
+        next({code:401,msg:"Unauthorized Access!!"})
     }else{
-        let comment=new Comment(req.body);
-        comment.save((err,result)=>{
-            if(err){
-                console.log("Error while adding comment",err);
-                next({code:500,msg:"Unable to post comment"})
-            }else{
-                res.status(200).json({msg:"Comment Posted Successfully!!!"})
-            }
-        });
+        const errors=validationResult(req);
+        if(!errors.isEmpty()){
+            console.log("Comment validation error",errors.errors)
+            next({code:401,msg:errors.errors[0].msg})
+        }else{
+            let body=req.body;
+            body.owner=req.body.id;
+            console.log("req.body:",body)
+            let comment=new Comment(body);
+            comment.save((err,result)=>{
+                if(err){
+                    console.log("Error while adding comment",err);
+                    next({code:500,msg:"Unable to post comment"})
+                }else{
+                    res.status(200).json({msg:"Comment Posted Successfully!!!"})
+                }
+            });
+        }
     }
 }
 

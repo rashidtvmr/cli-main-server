@@ -57,4 +57,4 @@ userSchema.methods.generateAuthToken = function() {
     return token;
   };
   
-module.exports=mongoose.model("users",userSchema);
+module.exports=mongoose.model("Users",userSchema);
