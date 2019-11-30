@@ -53,7 +53,7 @@ userController.loginUser=(req,res,next)=>{
     let errors=validationResult(req);
     
     if(!errors.isEmpty()){
-        next({code:409,msg:errors.errors});
+        next({code:409,msg:errors.errors[0].msg});
     }else{
     
         let body=req.body;

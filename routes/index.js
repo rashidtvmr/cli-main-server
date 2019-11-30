@@ -1,11 +1,10 @@
-let {userController,commentController}=require('../controller/index');
 let isAuth=require('../middleware/auth');
 
 let userRoute=require('express').Router();
 let commentRoute=require('express').Router();
-let nonUserCmntRoute=require('express').Router();
 
 const { check } = require('express-validator');
+const {userController,commentController}=require('../controller/index');
 
 /**
  * user route will handle route to /api/v1/user/
@@ -99,34 +98,11 @@ commentRoute.delete('/:id',(req,res)=>{
 });
 
 
-// <----- Non user comment section ----->
-
-// this will create a new post NOTE:POST request
- nonUserCmntRoute.post('/',(req,res)=>{
-    res.json("create nu a post");
-});
-
-// this will return a particular post
-nonUserCmntRoute.get('/:id',(req,res)=>{
-    res.json("get a nu post");
-});
-
-// this route handle commment update
-nonUserCmntRoute.put('/:id',(req,res)=>{
-    res.json("update a nu post");
-});
-
-// this route will handle comemnt deletion
-nonUserCmntRoute.delete('/:id',(req,res)=>{
-    res.json("dlt a nu post");
-});
-
 
 
 
 
 module.exports={
     userRoute,
-    commentRoute,
-    nonUserCmntRoute
+    commentRoute
 }

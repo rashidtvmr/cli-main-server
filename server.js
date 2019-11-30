@@ -10,7 +10,7 @@ const cors = require("cors");
 // making app global variable
 app = express();
 
-// app.use(cors());
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,14 +18,13 @@ app.use(express.static("public/spa"));
 
 // database setup
 const mongoose = require("mongoose");
-mongoose.connect(process.env.ATLAS_URL, { useNewUrlParser: true });
+mongoose.connect(process.env.URL, { useNewUrlParser: true });
 
 // route handling
 const { userRoute, commentRoute, nonUserCmntRoute } = require("./routes/index");
 
 app.use("/api/v1/cmnt", commentRoute);
 app.use("/api/v1/user", userRoute);
-app.use("/api/v1/nu/cmnt", nonUserCmntRoute);
 
 
 /**To handle error passed using next({code:errorCode,msg:"Error Message"}) */
